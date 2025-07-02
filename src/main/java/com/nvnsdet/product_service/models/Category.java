@@ -1,15 +1,15 @@
 package com.nvnsdet.product_service.models;
 
-
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
-public class Product extends BaseModel{
+public class Category extends BaseModel {
 
+    private String name;
     private String description;
-    private Double price;
-    private Category category;
-    private boolean isPrime;
+    private List<Product> products;
 }
