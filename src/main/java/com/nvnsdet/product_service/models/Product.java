@@ -13,4 +13,17 @@ public class Product extends BaseModel{
     private String imageUrl;
     private Category category;
     private boolean isPrime;
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + getId() +
+                ", name='" + getName() + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", category=" + category +
+                ", isPrime=" + isPrime +
+                '}';
+    }
 }

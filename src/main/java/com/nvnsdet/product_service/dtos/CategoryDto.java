@@ -12,4 +12,12 @@ public class CategoryDto {
     private String name;
     private String description;
 
+    @Override
+    public String toString() {
+        return "CategoryDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

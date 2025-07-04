@@ -16,5 +16,15 @@ public class ProductDto {
     private Double price;
     private String imageUrl;
 
-
+    @Override
+    public String toString() {
+        return "ProductDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", category=" + category +
+                ", price=" + price +
+                ", imageUrl='" + imageUrl + '\'' +
+                '}';
+    }
 }

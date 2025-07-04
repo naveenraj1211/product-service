@@ -45,19 +45,30 @@ public class ProductController {
     @PostMapping("/products")
     public ProductDto createProduct(@RequestBody ProductDto productDto)
     {
-        return new ProductDto();
+        Product product = from(productDto);
+        product = productService.createProduct(product);
+        if(product != null)
+            return from(product);
+        return null;
     }
 
     @PutMapping("/products/{id}")
     public ProductDto updateProduct(@PathVariable Long id, @RequestBody ProductDto productDto)
     {
-        return new ProductDto();
+        Product product = from(productDto);
+        product = productService.replaceProduct(product, id);
+        if(product != null)
+            return from(product);
+        return null;
     }
 
     @DeleteMapping("/products/{id}")
     public ProductDto deleteProductById(@PathVariable Long id)
     {
-        return new ProductDto();
+        Product product = productService.deleteProduct(id);
+        if(product != null)
+            return from(product);
+        return null;
     }
 
     public ProductDto from(Product product)

@@ -14,6 +14,15 @@ public class FakeStoreProductDto {
     private String image;
     private Double price;
 
-
-
+    @Override
+    public String toString() {
+        return "FakeStoreProductDto{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", category='" + category + '\'' +
+                ", image='" + image + '\'' +
+                ", price=" + price +
+                '}';
+    }
 }
