@@ -19,10 +19,13 @@ public class ProductController {
     private IProductService productService;
 
     @GetMapping("/products/{id}")
-    public ProductDto getProductById(@PathVariable Long id)
-    {
+    public ProductDto getProductById(@PathVariable Long id) {
+        if (id <= 0) {
+            throw new IllegalArgumentException("Product ID must be greater than 0");
+        }
+
         Product product = productService.getProductById(id);
-        if(product != null)
+        if (product != null)
             return from(product);
         return null;
     }
