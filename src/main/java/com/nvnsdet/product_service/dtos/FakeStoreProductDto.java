@@ -1,20 +1,19 @@
 package com.nvnsdet.product_service.dtos;
 
-
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class ProductDto {
-
+public class FakeStoreProductDto {
 
     private Long id;
-    private String name;
+    private String title;
     private String description;
-    private CategoryDto category;
+    private String category;
+    private String image;
     private Double price;
-    private String imageUrl;
+
 
 
 }

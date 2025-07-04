@@ -5,16 +5,41 @@ import com.nvnsdet.product_service.dtos.CategoryDto;
 import com.nvnsdet.product_service.dtos.ProductDto;
 import com.nvnsdet.product_service.models.Category;
 import com.nvnsdet.product_service.models.Product;
+import com.nvnsdet.product_service.services.IProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class ProductController {
 
+    @Autowired
+    private IProductService productService;
 
     @GetMapping("/products/{id}")
     public ProductDto getProductById(@PathVariable Long id)
     {
-        return new ProductDto();
+        Product product = productService.getProductById(id);
+        if(product != null)
+            return from(product);
+        return null;
+    }
+
+    @GetMapping("/products")
+    public List<ProductDto> getAllProducts()
+    {
+        List<Product> products = productService.getAllProducts();
+        List<ProductDto> productDtos = new ArrayList<>();
+        if(products != null && !products.isEmpty())
+        {
+            for (Product product : products) {
+                productDtos.add(from(product));
+            }
+        }
+
+        return productDtos;
     }
 
     @PostMapping("/products")
@@ -42,6 +67,7 @@ public class ProductController {
         productDto.setName(product.getName());
         productDto.setDescription(product.getDescription());
         productDto.setPrice(product.getPrice());
+        productDto.setImageUrl(product.getImageUrl());
         if(product.getCategory() != null)
         {
             CategoryDto categoryDto = new CategoryDto();
@@ -49,7 +75,7 @@ public class ProductController {
             categoryDto.setName(product.getCategory().getName());
             categoryDto.setDescription(product.getCategory().getDescription());
 
-            productDto.setCategoryDto(categoryDto);
+            productDto.setCategory(categoryDto);
         }
         return productDto;
     }
@@ -61,12 +87,13 @@ public class ProductController {
         product.setName(productDto.getName());
         product.setDescription(productDto.getDescription());
         product.setPrice(productDto.getPrice());
-        if(productDto.getCategoryDto() != null)
+        product.setImageUrl(productDto.getImageUrl());
+        if(productDto.getCategory() != null)
         {
             Category category = new Category();
-            category.setId(productDto.getCategoryDto().getId());
-            category.setName(productDto.getCategoryDto().getName());
-            category.setDescription(productDto.getCategoryDto().getDescription());
+            category.setId(productDto.getCategory().getId());
+            category.setName(productDto.getCategory().getName());
+            category.setDescription(productDto.getCategory().getDescription());
 
             product.setCategory(category);
         }
