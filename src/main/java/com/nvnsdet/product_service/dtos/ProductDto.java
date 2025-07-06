@@ -1,6 +1,8 @@
 package com.nvnsdet.product_service.dtos;
 
 
+import com.nvnsdet.product_service.models.Category;
+import com.nvnsdet.product_service.models.Product;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,5 +28,26 @@ public class ProductDto {
                 ", price=" + price +
                 ", imageUrl='" + imageUrl + '\'' +
                 '}';
+    }
+
+    public Product toProduct()
+    {
+        Product product = new Product();
+        product.setId(this.getId());
+        product.setName(this.getName());
+        product.setDescription(this.getDescription());
+        product.setPrice(this.getPrice());
+        product.setImageUrl(this.getImageUrl());
+        if(this.getCategory() != null)
+        {
+            Category category = new Category();
+            category.setId(this.getCategory().getId());
+            category.setName(this.getCategory().getName());
+            category.setDescription(this.getCategory().getDescription());
+
+            product.setCategory(category);
+        }
+
+        return product;
     }
 }

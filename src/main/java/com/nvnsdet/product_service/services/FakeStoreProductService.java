@@ -30,7 +30,7 @@ public class FakeStoreProductService implements IProductService {
         ResponseEntity<FakeStoreProductDto> fakeStoreProductDtoResponseEntity  =
                 restTemplate.getForEntity("https://fakestoreapi.com/products/{id}", FakeStoreProductDto.class, id);
         if(fakeStoreProductDtoResponseEntity.getStatusCode().is2xxSuccessful() && fakeStoreProductDtoResponseEntity.getBody() != null) {
-            return from(fakeStoreProductDtoResponseEntity.getBody());
+            return fakeStoreProductDtoResponseEntity.getBody().toProduct();
         }
         return null;
     }
@@ -44,7 +44,7 @@ public class FakeStoreProductService implements IProductService {
                 restTemplate.getForEntity("https://fakestoreapi.com/products", FakeStoreProductDto[].class);
         if(fakeStoreProductDtoResponseEntity.getStatusCode().is2xxSuccessful() && fakeStoreProductDtoResponseEntity.getBody() != null) {
             for(FakeStoreProductDto fakeStoreProductDto : fakeStoreProductDtoResponseEntity.getBody()) {
-                products.add(from(fakeStoreProductDto));
+                products.add(fakeStoreProductDto.toProduct());
             }
             return products;
         }
@@ -53,26 +53,26 @@ public class FakeStoreProductService implements IProductService {
 
     @Override
     public Product createProduct(Product product) {
-        FakeStoreProductDto fakeStoreProductDto = from(product);
+        FakeStoreProductDto fakeStoreProductDto = product.toFakeStoreProductDto();
         ResponseEntity<FakeStoreProductDto> fakeStoreProductDtoResponseEntity =
                 callForEntity("https://fakestoreapi.com/products", HttpMethod.POST, fakeStoreProductDto,
                         FakeStoreProductDto.class);
 
         if(fakeStoreProductDtoResponseEntity.getStatusCode().is2xxSuccessful() && fakeStoreProductDtoResponseEntity.getBody() != null) {
-            return from(fakeStoreProductDtoResponseEntity.getBody());
+            return fakeStoreProductDtoResponseEntity.getBody().toProduct();
         }
         return null;
     }
 
     @Override
     public Product replaceProduct(Product product, Long id) {
-        FakeStoreProductDto fakeStoreProductDto = from(product);
+        FakeStoreProductDto fakeStoreProductDto = product.toFakeStoreProductDto();
         ResponseEntity<FakeStoreProductDto> fakeStoreProductDtoResponseEntity =
                 callForEntity("https://fakestoreapi.com/products/{id}", HttpMethod.PUT, fakeStoreProductDto,
                         FakeStoreProductDto.class, id);
 
         if(fakeStoreProductDtoResponseEntity.getStatusCode().is2xxSuccessful() && fakeStoreProductDtoResponseEntity.getBody() != null) {
-            return from(fakeStoreProductDtoResponseEntity.getBody());
+            return fakeStoreProductDtoResponseEntity.getBody().toProduct();
         }
         return null;
     }
@@ -84,7 +84,7 @@ public class FakeStoreProductService implements IProductService {
                        FakeStoreProductDto.class, id);
 
         if(fakeStoreProductDtoResponseEntity.getStatusCode().is2xxSuccessful() && fakeStoreProductDtoResponseEntity.getBody() != null) {
-            return from(fakeStoreProductDtoResponseEntity.getBody());
+            return fakeStoreProductDtoResponseEntity.getBody().toProduct();
         }
         return null;
     }
@@ -98,48 +98,6 @@ public class FakeStoreProductService implements IProductService {
     }
 
 
-    public Product from(FakeStoreProductDto fakeStoreProductDto) {
-        // This method converts a FakeStoreProductDto to a Product entity.
-        Product product = new Product();
-        if(fakeStoreProductDto.getId() != null)
-            product.setId(fakeStoreProductDto.getId());
 
-
-        if(fakeStoreProductDto.getTitle() != null)
-            product.setName(fakeStoreProductDto.getTitle());
-        if(fakeStoreProductDto.getDescription() != null)
-            product.setDescription(fakeStoreProductDto.getDescription());
-        if(fakeStoreProductDto.getPrice() != null)
-            product.setPrice(fakeStoreProductDto.getPrice());
-        if(fakeStoreProductDto.getImage() != null)
-            product.setImageUrl(fakeStoreProductDto.getImage());
-        if(fakeStoreProductDto.getCategory() != null)
-        {
-            Category category = new Category();
-            category.setName(fakeStoreProductDto.getCategory());
-            product.setCategory(category);
-        }
-        return product;
-    }
-
-    public FakeStoreProductDto from(Product product) {
-        // This method converts a Product entity to a FakeStoreProductDto.
-        FakeStoreProductDto fakeStoreProductDto = new FakeStoreProductDto();
-        if(product.getId() != null)
-            fakeStoreProductDto.setId(product.getId());
-        if(product.getName() != null)
-            fakeStoreProductDto.setTitle(product.getName());
-        if(product.getDescription() != null)
-            fakeStoreProductDto.setDescription(product.getDescription());
-        if (product.getPrice() != null)
-            fakeStoreProductDto.setPrice(product.getPrice());
-        if(product.getImageUrl() != null)
-            fakeStoreProductDto.setImage(product.getImageUrl());
-        if(product.getCategory() != null)
-        {
-           fakeStoreProductDto.setCategory(product.getCategory().getName());
-        }
-        return fakeStoreProductDto;
-    }
 
 }
