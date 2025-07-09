@@ -7,6 +7,7 @@ import com.nvnsdet.product_service.models.Category;
 import com.nvnsdet.product_service.models.Product;
 import com.nvnsdet.product_service.services.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -16,8 +17,9 @@ import java.util.List;
 public class ProductController {
 
     @Autowired
+    @Qualifier("sps") // or "fkps" for FakeStoreProductService)
     private IProductService productService;
-// cpommernt
+
     @GetMapping("/products/{id}")
     public ProductDto getProductById(@PathVariable Long id) {
         if (id <= 0) {
@@ -66,14 +68,14 @@ public class ProductController {
     }
 
     @DeleteMapping("/products/{id}")
-    public ProductDto deleteProductById(@PathVariable Long id)
+    public Boolean deleteProductById(@PathVariable Long id)
     {
-        Product product = productService.deleteProduct(id);
-        if(product != null)
-            return product.toProductDto();
-        return null;
+        Product product = productService.getProductById(id);
+        if(product != null) {
+           return productService.deleteProduct(id);
+        }
+        return false;
     }
-
 
 
 }

@@ -18,7 +18,8 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service // This annotation indicates that this class is a service component in the Spring context.
+@Service("fkps")
+// This annotation indicates that this class is a service component in the Spring context.
 public class FakeStoreProductService implements IProductService {
 
     @Autowired
@@ -78,15 +79,16 @@ public class FakeStoreProductService implements IProductService {
     }
 
     @Override
-    public Product deleteProduct(Long id) {
+    public Boolean deleteProduct(Long id) {
         ResponseEntity<FakeStoreProductDto> fakeStoreProductDtoResponseEntity =
                 callForEntity("https://fakestoreapi.com/products/{id}", HttpMethod.DELETE,null,
                        FakeStoreProductDto.class, id);
 
         if(fakeStoreProductDtoResponseEntity.getStatusCode().is2xxSuccessful() && fakeStoreProductDtoResponseEntity.getBody() != null) {
-            return fakeStoreProductDtoResponseEntity.getBody().toProduct();
+            // fakeStoreProductDtoResponseEntity.getBody().toProduct();
+            return true;
         }
-        return null;
+        return false;
     }
 
 
