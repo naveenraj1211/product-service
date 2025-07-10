@@ -28,9 +28,9 @@ public class FakeStoreProductService implements IProductService {
     @Override
     public Product getProductById(Long id) {
         RestTemplate restTemplate = restTemplateBuilder.build();
-        ResponseEntity<FakeStoreProductDto> fakeStoreProductDtoResponseEntity  =
+        ResponseEntity<FakeStoreProductDto> fakeStoreProductDtoResponseEntity =
                 restTemplate.getForEntity("https://fakestoreapi.com/products/{id}", FakeStoreProductDto.class, id);
-        if(fakeStoreProductDtoResponseEntity.getStatusCode().is2xxSuccessful() && fakeStoreProductDtoResponseEntity.getBody() != null) {
+        if (fakeStoreProductDtoResponseEntity.getStatusCode().is2xxSuccessful() && fakeStoreProductDtoResponseEntity.getBody() != null) {
             return fakeStoreProductDtoResponseEntity.getBody().toProduct();
         }
         return null;
@@ -41,10 +41,10 @@ public class FakeStoreProductService implements IProductService {
     public List<Product> getAllProducts() {
         List<Product> products = new ArrayList<>();
         RestTemplate restTemplate = restTemplateBuilder.build();
-        ResponseEntity<FakeStoreProductDto[]> fakeStoreProductDtoResponseEntity  =
+        ResponseEntity<FakeStoreProductDto[]> fakeStoreProductDtoResponseEntity =
                 restTemplate.getForEntity("https://fakestoreapi.com/products", FakeStoreProductDto[].class);
-        if(fakeStoreProductDtoResponseEntity.getStatusCode().is2xxSuccessful() && fakeStoreProductDtoResponseEntity.getBody() != null) {
-            for(FakeStoreProductDto fakeStoreProductDto : fakeStoreProductDtoResponseEntity.getBody()) {
+        if (fakeStoreProductDtoResponseEntity.getStatusCode().is2xxSuccessful() && fakeStoreProductDtoResponseEntity.getBody() != null) {
+            for (FakeStoreProductDto fakeStoreProductDto : fakeStoreProductDtoResponseEntity.getBody()) {
                 products.add(fakeStoreProductDto.toProduct());
             }
             return products;
@@ -59,7 +59,7 @@ public class FakeStoreProductService implements IProductService {
                 callForEntity("https://fakestoreapi.com/products", HttpMethod.POST, fakeStoreProductDto,
                         FakeStoreProductDto.class);
 
-        if(fakeStoreProductDtoResponseEntity.getStatusCode().is2xxSuccessful() && fakeStoreProductDtoResponseEntity.getBody() != null) {
+        if (fakeStoreProductDtoResponseEntity.getStatusCode().is2xxSuccessful() && fakeStoreProductDtoResponseEntity.getBody() != null) {
             return fakeStoreProductDtoResponseEntity.getBody().toProduct();
         }
         return null;
@@ -72,34 +72,26 @@ public class FakeStoreProductService implements IProductService {
                 callForEntity("https://fakestoreapi.com/products/{id}", HttpMethod.PUT, fakeStoreProductDto,
                         FakeStoreProductDto.class, id);
 
-        if(fakeStoreProductDtoResponseEntity.getStatusCode().is2xxSuccessful() && fakeStoreProductDtoResponseEntity.getBody() != null) {
+        if (fakeStoreProductDtoResponseEntity.getStatusCode().is2xxSuccessful() && fakeStoreProductDtoResponseEntity.getBody() != null) {
             return fakeStoreProductDtoResponseEntity.getBody().toProduct();
         }
         return null;
     }
 
     @Override
-    public Boolean deleteProduct(Long id) {
+    public void deleteProduct(Long id) {
         ResponseEntity<FakeStoreProductDto> fakeStoreProductDtoResponseEntity =
-                callForEntity("https://fakestoreapi.com/products/{id}", HttpMethod.DELETE,null,
-                       FakeStoreProductDto.class, id);
-
-        if(fakeStoreProductDtoResponseEntity.getStatusCode().is2xxSuccessful() && fakeStoreProductDtoResponseEntity.getBody() != null) {
-            // fakeStoreProductDtoResponseEntity.getBody().toProduct();
-            return true;
-        }
-        return false;
+                callForEntity("https://fakestoreapi.com/products/{id}", HttpMethod.DELETE, null,
+                        FakeStoreProductDto.class, id);
     }
 
 
-    public <T> ResponseEntity<T> callForEntity(String url,HttpMethod httpMethod,  @Nullable Object request, Class<T> responseType, Object... uriVariables) throws RestClientException {
+    public <T> ResponseEntity<T> callForEntity(String url, HttpMethod httpMethod, @Nullable Object request, Class<T> responseType, Object... uriVariables) throws RestClientException {
         RestTemplate restTemplate = restTemplateBuilder.build();
         RequestCallback requestCallback = restTemplate.httpEntityCallback(request, responseType);
         ResponseExtractor<ResponseEntity<T>> responseExtractor = restTemplate.responseEntityExtractor(responseType);
         return restTemplate.execute(url, httpMethod, requestCallback, responseExtractor, uriVariables);
     }
-
-
 
 
 }
