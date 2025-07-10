@@ -5,19 +5,22 @@ import com.nvnsdet.product_service.dtos.CategoryDto;
 import com.nvnsdet.product_service.models.Category;
 import com.nvnsdet.Category_service.services.ICategoryService;
 import jakarta.validation.constraints.Min;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
 @RestController
 @RequestMapping("/categories")
+@Validated  // 👈 enables method parameter validation
 public class CategoryController {
 
     private final ICategoryService categoryService;
 
-
+    @Autowired
     public CategoryController(ICategoryService categoryService) {
         // Constructor can be used for dependency injection if needed
         this.categoryService = categoryService;

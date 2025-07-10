@@ -13,9 +13,13 @@ import java.util.Optional;
 @Service
 public class StorageCategoryService implements ICategoryService {
 
-    @Autowired
-    CategoryRepo categoryRepo;
 
+    private final CategoryRepo categoryRepo;
+
+    @Autowired
+    public StorageCategoryService(CategoryRepo categoryRepo) {
+        this.categoryRepo = categoryRepo;
+    }
 
     @Override
     public Category getCategoryById(Long id) {

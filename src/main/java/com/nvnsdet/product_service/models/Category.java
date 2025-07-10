@@ -6,6 +6,7 @@ import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -17,6 +18,14 @@ public class Category extends BaseModel {
     private String description;
     @OneToMany(mappedBy = "category")
     private List<Product> products;
+
+
+    public Category() {
+        // Default constructor
+        this.setCreatedAt(new Date());
+        this.setUpdatedAt(new Date());
+        this.setState(State.ACTIVE);
+    }
 
     @Override
     public String toString() {
