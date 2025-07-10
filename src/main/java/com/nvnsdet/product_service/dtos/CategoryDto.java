@@ -1,6 +1,7 @@
 package com.nvnsdet.product_service.dtos;
 
 
+import com.nvnsdet.product_service.models.Category;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,5 +20,13 @@ public class CategoryDto {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 '}';
+    }
+
+    public Category toCategory() {
+        Category category = new Category();
+        category.setId(this.getId());
+        category.setName(this.getName());
+        category.setDescription(this.getDescription());
+        return category;
     }
 }

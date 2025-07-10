@@ -1,5 +1,6 @@
 package com.nvnsdet.product_service.models;
 
+import com.nvnsdet.product_service.dtos.CategoryDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import lombok.Getter;
@@ -25,4 +26,14 @@ public class Category extends BaseModel {
                 ", products=" + products +
                 '}';
     }
+
+    public CategoryDto toCategoryDto() {
+        CategoryDto categoryDto = new CategoryDto();
+        categoryDto.setId(this.getId());
+        categoryDto.setName(this.getName());
+        categoryDto.setDescription(this.getDescription());
+        return categoryDto;
+    }
+
+
 }
