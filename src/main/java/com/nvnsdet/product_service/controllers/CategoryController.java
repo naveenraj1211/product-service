@@ -3,50 +3,60 @@ package com.nvnsdet.product_service.controllers;
 
 import com.nvnsdet.product_service.dtos.CategoryDto;
 import com.nvnsdet.product_service.models.Category;
+import com.nvnsdet.Category_service.services.ICategoryService;
+import jakarta.validation.constraints.Min;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
+
 
 @RestController
+@RequestMapping("/categories")
 public class CategoryController {
 
+    private final ICategoryService categoryService;
 
-    @GetMapping("/categories/{id}")
-    public CategoryDto getCategoryById(@PathVariable Long id){
-        return new CategoryDto();
+
+    public CategoryController(ICategoryService categoryService) {
+        // Constructor can be used for dependency injection if needed
+        this.categoryService = categoryService;
     }
 
-    @PostMapping("/categories")
-    public CategoryDto createCategoryById(@RequestBody CategoryDto categoryDto){
-        return new CategoryDto();
+    @GetMapping("/{id}")
+    public ResponseEntity<CategoryDto> getCategoryById(@PathVariable @Min(1) Long id) {
+        Category category = categoryService.getCategoryById(id);
+        return ResponseEntity.ok(category.toCategoryDto());
     }
 
-    @PutMapping("/categories/{id}")
-    public CategoryDto updateCategoryById(@PathVariable Long id, @RequestBody CategoryDto categoryDto){
-        return new CategoryDto();
-    }
-
-    @DeleteMapping("/categories/{id}")
-    public CategoryDto deleteCategoryById(@PathVariable Long id){
-        return new CategoryDto();
-    }
-
-
-    public CategoryDto from(Category category)
-    {
-        CategoryDto categoryDto = new CategoryDto();
-        categoryDto.setId(categoryDto.getId());
-        categoryDto.setName(category.getName());
-        categoryDto.setDescription(category.getDescription());
-
-        return categoryDto;
+    @GetMapping()
+    public ResponseEntity<List<CategoryDto>> getAllCategories() {
+        List<Category> categories = categoryService.getAllCategories();
+        List<CategoryDto> categoryDtos = categories.stream()
+                .map(Category::toCategoryDto)
+                .toList();
+        return ResponseEntity.ok(categoryDtos);
     }
 
 
-    public Category from(CategoryDto categoryDto)
-    {
-        Category category = new Category();
-        category.setId(categoryDto.getId());
-        category.setName(categoryDto.getName());
-        category.setDescription(categoryDto.getDescription());
-        return category;
+    @PostMapping()
+    public ResponseEntity<CategoryDto> createCategoryById(@RequestBody CategoryDto categoryDto) {
+        Category category = categoryDto.toCategory();
+        category = categoryService.createCategory(category);
+        return ResponseEntity.status(HttpStatus.CREATED).body(category.toCategoryDto());
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CategoryDto> updateCategoryById(@PathVariable @Min(1) Long id, @RequestBody CategoryDto categoryDto) {
+        Category category = categoryDto.toCategory();
+        category = categoryService.replaceCategory(category,id);
+        return ResponseEntity.ok(category.toCategoryDto());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteCategoryById(@PathVariable @Min(1) Long id) {
+       categoryService.deleteCategory(id);
+       return ResponseEntity.ok("Category deleted successfully");
+    }
+
 }

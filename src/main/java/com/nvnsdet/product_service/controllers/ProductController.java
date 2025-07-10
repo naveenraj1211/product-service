@@ -1,80 +1,62 @@
 package com.nvnsdet.product_service.controllers;
 
 
-import com.nvnsdet.product_service.dtos.CategoryDto;
 import com.nvnsdet.product_service.dtos.ProductDto;
-import com.nvnsdet.product_service.models.Category;
 import com.nvnsdet.product_service.models.Product;
 import com.nvnsdet.product_service.services.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
+import jakarta.validation.constraints.Min;
 import java.util.List;
 
 @RestController
+@RequestMapping("products")
+@Validated  // 👈 enables method parameter validation
 public class ProductController {
 
+    private final IProductService productService;
+
     @Autowired
-    @Qualifier("sps") // or "fkps" for FakeStoreProductService)
-    private IProductService productService;
+    public ProductController(@Qualifier("sps") IProductService productService) {
+        this.productService = productService;
+    }
 
-    @GetMapping("/products/{id}")
-    public ProductDto getProductById(@PathVariable Long id) {
-        if (id <= 0) {
-            throw new IllegalArgumentException("Product ID must be greater than 0");
-        }
-
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductDto> getProductById(@PathVariable @Min(1) Long id) {
         Product product = productService.getProductById(id);
-        if (product != null)
-            return product.toProductDto();
-        return null;
+        return ResponseEntity.ok(product.toProductDto());
     }
 
-    @GetMapping("/products")
-    public List<ProductDto> getAllProducts()
-    {
+    @GetMapping()
+    public ResponseEntity<List<ProductDto>> getAllProducts() {
         List<Product> products = productService.getAllProducts();
-        List<ProductDto> productDtos = new ArrayList<>();
-        if(products != null && !products.isEmpty())
-        {
-            for (Product product : products) {
-                productDtos.add(product.toProductDto());
-            }
-        }
-
-        return productDtos;
+        List<ProductDto> productDtos = products.stream().map(Product::toProductDto)
+                .toList();
+        return ResponseEntity.ok(productDtos);
     }
 
-    @PostMapping("/products")
-    public ProductDto createProduct(@RequestBody ProductDto productDto)
-    {
+    @PostMapping()
+    public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto) {
         Product product = productDto.toProduct();
         product = productService.createProduct(product);
-        if(product != null)
-            return product.toProductDto();
-        return null;
+        return ResponseEntity.status(HttpStatus.CREATED).body(product.toProductDto());
     }
 
-    @PutMapping("/products/{id}")
-    public ProductDto updateProduct(@PathVariable Long id, @RequestBody ProductDto productDto)
-    {
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductDto>  updateProduct(@PathVariable @Min(1) Long id, @RequestBody ProductDto productDto) {
         Product product = productDto.toProduct();
         product = productService.replaceProduct(product, id);
-        if(product != null)
-            return product.toProductDto();
-        return null;
+        return ResponseEntity.ok(product.toProductDto());
     }
 
-    @DeleteMapping("/products/{id}")
-    public Boolean deleteProductById(@PathVariable Long id)
-    {
-        Product product = productService.getProductById(id);
-        if(product != null) {
-           return productService.deleteProduct(id);
-        }
-        return false;
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteProductById(@PathVariable @Min(1) Long id) {
+        productService.deleteProduct(id);
+        return ResponseEntity.ok("Product deleted successfully");
     }
 
 
