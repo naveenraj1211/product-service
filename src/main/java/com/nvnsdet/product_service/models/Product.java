@@ -20,7 +20,7 @@ public class Product extends BaseModel {
     private String description;
     private Double price;
     private String imageUrl;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Category category;
     private boolean isPrime;
 
