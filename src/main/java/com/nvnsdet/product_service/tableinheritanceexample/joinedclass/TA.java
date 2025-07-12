@@ -1,0 +1,6 @@
+package com.nvnsdet.product_service.tableinheritanceexample.joinedclass;
+
+public class TA {
+
+    int numOfHelpSessions;
+}
