@@ -1,6 +1,8 @@
 package com.nvnsdet.product_service.tableinheritanceexample.tableperclass;
 
-public class TA {
+import jakarta.persistence.Entity;
 
+@Entity(name = "TPC_TA")
+public class TA extends User {
     int numOfHelpSessions;
 }

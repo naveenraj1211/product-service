@@ -1,6 +1,8 @@
 package com.nvnsdet.product_service.tableinheritanceexample.tableperclass;
 
-public class Instructor {
+import jakarta.persistence.Entity;
 
+@Entity(name = "TPC_Instructor")
+public class Instructor extends User {
     String companyName;
 }
