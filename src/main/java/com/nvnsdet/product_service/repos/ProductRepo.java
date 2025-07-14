@@ -11,4 +11,7 @@ import java.util.Optional;
 public interface ProductRepo extends JpaRepository<Product, Long> {
 
     long countByCategoryId(Long categoryId);
+
+    //List<Product>  findProductOrderByPriceDesc();
+    List<Product> findProductByOrderByPriceDesc();
 }
