@@ -15,11 +15,11 @@ public class ProductRepoTest {
 
     @Test
     public void testQuery(){
-       // List<Product> products = productRepo.findProductOrderByPriceDesc();
-//        List<Product> products = productRepo.findProductByOrderByPriceDesc();
-//        for (Product product : products) {
-//            System.out.println(product.getName() + " - " + product.getPrice());
-//        }
+        //List<Product> products = productRepo.findProductOrderByPriceDesc();
+        List<Product> products = productRepo.findProductByOrderByPriceDesc();
+        for (Product product : products) {
+            System.out.println(product.getName() + " - " + product.getPrice());
+        }
 
         System.out.println(productRepo.findProductNameById(1l));
         System.out.println(productRepo.findCategoryNameByProductId(1l));
